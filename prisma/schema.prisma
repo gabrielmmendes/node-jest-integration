@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model autores {
+  id            Int       @id @default(autoincrement())
+  nome          String
+  nacionalidade String
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+  livros        livros[]
+}
+
+model editoras {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  cidade     String
+  email      String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  livros     livros[]
+}
+
+model livros {
+  id         Int       @id @default(autoincrement())
+  titulo     String
+  paginas    Int
+  editora_id Int
+  autor_id   Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  autores    autores   @relation(fields: [autor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  editoras   editoras  @relation(fields: [editora_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
